@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -106,8 +107,8 @@ func (k *Kuaidi100) EOrder(data ReqeOrder) (res *ResError, err error) {
 	param += "&key=" + k.Key
 	param += "&sign=" + Md5(string(buf)+t+k.Key+k.Secret)
 	param += "&t=" + fmt.Sprint(time.Now().Unix())
-	param += "&param=" + string(buf)
-
+	param += "&param=" + url.QueryEscape(string(buf))
+	fmt.Println(string(buf))
 	req, err := http.NewRequest("POST", "http://poll.kuaidi100.com/printapi/printtask.do?"+param, nil)
 	if err != nil {
 		return nil, err
@@ -163,7 +164,7 @@ func (k *Kuaidi100) PrintOrder(data ReqPrintOrder) (res *ResError, err error) {
 	param += "&key=" + k.Key
 	param += "&sign=" + Md5(string(buf)+t+k.Key+k.Secret)
 	param += "&t=" + fmt.Sprint(time.Now().Unix())
-	param += "&param=" + string(buf)
+	param += "&param=" + url.QueryEscape(string(buf))
 	fmt.Println(param)
 	req, err := http.NewRequest("POST", "http://poll.kuaidi100.com/printapi/printtask.do?"+param, nil)
 	if err != nil {
